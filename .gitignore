@@ -3,3 +3,4 @@ target/**
 *.iml
 output/**
 hadoop.log
+hadoop.log.*

@@ -1,12 +1,12 @@
 /**
  * Copyright 2013 Jesse Anderson
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,32 +14,33 @@
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class CardMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-	private static Pattern inputPattern = Pattern.compile("(.*) (\\d*)");
+public class CardMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
 
-	@Override
-	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-		String inputLine = value.toString();
+  private static Pattern inputPattern = Pattern.compile("(\\d*),(\\d*),(\\d.\\d),(\\d*)");
 
-		Matcher inputMatch = inputPattern.matcher(inputLine);
+  @Override
+  public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+    String inputLine = value.toString();
 
-		// Use regex to throw out Jacks, Queens, Kings, Aces and Jokers
-		if (inputMatch.matches()) {
-			// Normalize inconsistent case for card suits
-			String cardSuit = inputMatch.group(1).toLowerCase();
-			int cardValue = Integer.parseInt(inputMatch.group(2));
+    Matcher inputMatch = inputPattern.matcher(inputLine);
 
-			context.write(new Text(cardSuit), new IntWritable(cardValue));
-		}
-	}
+    // Use regex to throw out Jacks, Queens, Kings, Aces and Jokers
+    if (inputMatch.matches()) {
+      // Normalize inconsistent case for card suits
+
+      String movieId = inputMatch.group(2);
+      double rating = Double.valueOf(inputMatch.group(3));
+
+      context.write(new Text(movieId), new DoubleWritable(rating));
+    }
+  }
 }
