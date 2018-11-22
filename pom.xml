@@ -41,7 +41,7 @@
               <archive>
                 <manifest>
                   <mainClass>
-                    CardDriver
+                    Main
                   </mainClass>
                 </manifest>
               </archive>
