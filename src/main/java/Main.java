@@ -25,12 +25,10 @@ public class Main extends Configured implements Tool {
     job.setJarByClass(Main.class);
     job.setJobName(this.getClass().getName());
 
-//    FileInputFormat.setInputPaths(job, new Path(input));
     MultipleInputs.addInputPath(job, new Path(input1), TextInputFormat.class, RatingMapper.class);
     MultipleInputs.addInputPath(job, new Path(input2), TextInputFormat.class, MovieMapper.class);
     FileOutputFormat.setOutputPath(job, new Path(output));
 
-//    job.setMapperClass(RatingMapper.class);
     job.setReducerClass(MovieReducer.class);
 
     job.setMapOutputKeyClass(Text.class);
